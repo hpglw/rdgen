@@ -69,7 +69,7 @@ env:
   TAG_NAME: "${{ inputs.upload-tag }}"
   VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
   # vcpkg version: 2024.07.12
-  VCPKG_COMMIT_ID: "120deac3062162151622ca4860575a33844ba10b"
+  VCPKG_COMMIT_ID: "2025.11.22"
   ARMV7_VCPKG_COMMIT_ID: "6f29f12e82a8293156836ad81cc9bf5af41fe836"
   VERSION: "${{ fromJson(inputs.extras).version }}"
   NDK_VERSION: "r27c"
@@ -481,6 +481,14 @@ jobs:
         with:
           name: bridge-artifact
           path: ./
+
+      - name: Install and verify ninja
+        run: |
+        brew reinstall ninja  # 强制重新安装，确保最新
+        NINJA_PATH=$(brew --prefix ninja)/bin
+        echo "$NINJA_PATH" >> $GITHUB_PATH
+        which ninja
+        ninja --version  # 验证能正常运行
 
       - name: Setup vcpkg with Github Actions binary cache
         uses: lukka/run-vcpkg@v11
